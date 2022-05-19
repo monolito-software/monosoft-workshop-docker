@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+  phpapp:
+    image: php:7.4.29-cli
+    container_name: phpapp
+    working_dir: /app
+    volumes:
+      - ./:/app
+    ports:
+      - 8000:8000
+    entrypoint: ["php", "-S", "0.0.0.0:8000", "-t", "."]
+    networks:
+      - redephpapp
+
+  client:
+    image: cliente:lts
+    container_name: cliente
+    stdin_open: true 
+    tty: true
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - redephpapp
+    depends_on:
+      - phpapp
+
+networks:
+  redephpapp:
+    driver: bridge
